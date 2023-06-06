@@ -1,32 +1,36 @@
-import { createTheme } from '@mui/material';
+import { createTheme } from "@mui/material";
 
 const theme = createTheme({
   palette: {
     background: {
-      default: '#ffffff',
+      default: "#ffffff",
     },
     primary: {
-      main: '#00CCFF',
+      main: "#00CCFF",
     },
     secondary: {
-      main: '#FFCC00',
+      main: "#FFCC00",
+    },
+    white: {
+      main: "#ffffff",
     },
   },
-  
+
   typography: {
     fontFamily: [
       '"Century Gothic"',
-      'Arial',
-      '-apple-system',
-      'BlinkMacSystemFont',
+      "Arial",
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Roboto',
+      "Roboto",
       '"Helvetica Neue"',
-      'sans-serif',
+      "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(','),
+    ].join(","),
+    fontWeightRegular: 600,
   },
 });
 
