@@ -8,7 +8,6 @@ import {
   Toolbar,
   Typography,
   Box,
-  Button,
   Divider,
   List,
   ListItem,
@@ -17,12 +16,18 @@ import {
   Drawer,
   useScrollTrigger,
   Link,
-  Tooltip
+  Tooltip,
+  MenuList,
+  MenuItem,
+  tooltipClasses,
+  styled,
+  Avatar
 } from "@mui/material";
-import { Menu as MenuIcon } from "@mui/icons-material";
+import { Menu as MenuIcon, Search } from "@mui/icons-material";
 import { Link as RouterLink } from "react-router-dom";
 import { Logo, LogoWhite } from "../assets";
 import theme from "../assets/css/theme";
+import { Btn } from ".";
 
 const drawerWidth = 240;
 const navItems = [
@@ -70,10 +75,27 @@ const langs = [
     name: "EN",
     flag: "",
   },
-]
+];
+
+const Dropdown = styled(({className, ...props}) => (
+  <Tooltip {...props} classes={{popper: className}} arrow />
+))(({theme}) => ({ 
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: 'white',
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[15],
+  },
+
+  [`& .${tooltipClasses.arrow}`]: {
+    color: "#fff",
+  }
+}))
 
 const Navbar = (props) => {
-  const scrollTrigger = useScrollTrigger();
+  const scrollTrigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0,
+  });
   const { window } = props;
   const container = window !== undefined ? () => window().document.body : undefined;
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -104,19 +126,22 @@ const Navbar = (props) => {
     <ThemeProvider theme={theme}>
       <AppBar
         component="nav"
-        sx={{ backgroundColor: "transparent",
-        px: { xs: 2, md: 20 },
-        py: 2,
-        alignItems: "center", }}
+        sx={{
+          backgroundColor: scrollTrigger ? "#fff" : "transparent",
+          px: { xs: 2, md: 20 },
+          py: scrollTrigger ? 1 : 2,
+          alignItems: "center",
+          transition: ".5s"
+        }}
         position="fixed"
         elevation={scrollTrigger ? 4 : 0}
       >
         <Toolbar sx={{ justifyContent: "space-between", width: "100%" }}>
           <Link component={RouterLink} to='/' underline='none'>
-            <img src={LogoWhite} style={{ width: "230px", height: "50px" }} />
+            <img src={scrollTrigger ? Logo : LogoWhite} style={{ width: "230px", height: "50px" }} />
           </Link>
           <IconButton
-            color="white"
+            color={scrollTrigger ? "rgba(0, 0, 0, .8)" : "white"}
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
@@ -124,14 +149,44 @@ const Navbar = (props) => {
           >
             <MenuIcon />
           </IconButton>
-          <Box sx={{ display: { xs: "none", sm: "flex" }, justifyContent: 'space-evenly' }}>
-            {navItems.map((item) => (
-              <Tooltip key={item} title="Drop" arrow>
-                <Typography sx={{ color: "#fff", mr: 2.5, fontSize: 14 }}>
-                {item.title}
-              </Typography>
-              </Tooltip>
+          <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: 'center' }}>
+            {navItems.map((item, key) => (
+              <Dropdown key={key} title={
+                <MenuList sx={{
+                  "& .MuiMenuItem-root": {
+                    fontSize: 13,
+                    "&:hover": {
+                      backgroundColor: 'rgba(0, 0, 0, .15)'
+                    },
+                  }
+                }}>
+                  {
+                   item.options.map((option, optKey) => (
+                    <MenuItem key={optKey} component={RouterLink} divider>
+                      {option}
+                    </MenuItem>
+                   )) 
+                  }
+                </MenuList>
+              }>
+                <Typography sx={{ color: scrollTrigger ? "rgba(0, 0, 0, .8)" : "#fff", mr: 2.5, fontSize: 13, cursor: 'pointer' }}>
+                  {item.title}
+                </Typography>
+              </Dropdown>
             ))}
+            <Link component={RouterLink} underline="none" sx={{ display: 'flex', alignItems: 'center', color: scrollTrigger ? "rgba(0, 0, 0, .8)" : '#fff', mr: 2 }}>
+              <Avatar src="" alt="lang" sx={{ height: 24, width: 24 }} />
+              <Typography fontSize={13} ml={.5} >EN</Typography>
+            </Link>
+            <Link component={RouterLink} sx={{mr: 2}} >
+              <Search sx={{ color: scrollTrigger ? "rgba(0, 0, 0, .8)" : "#fff", mt: 1 }}/>              
+            </Link>
+            <Btn sx={{ mr: 1, backgroundColor: scrollTrigger ? '#00CCFF' : '#fff', color: scrollTrigger ? '#fff' : '#00CCFF', '&:hover': {color: "#fff"} }}>
+              Login
+            </Btn>
+            <Btn sx={{ backgroundColor: scrollTrigger ? '#00CCFF' : '#fff', color: scrollTrigger ? '#fff' : '#00CCFF', '&:hover': {color: "#fff"} }}>
+              Register
+            </Btn>
           </Box>
         </Toolbar>
       </AppBar>
