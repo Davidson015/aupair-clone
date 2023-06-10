@@ -22,6 +22,14 @@ body {
   min-height: 100vh;
 }
 
+.parallax {
+  background-image: url("./assets/images/backdrop.jpg");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 /* a {
   font-weight: 500;
   color: #646cff;
